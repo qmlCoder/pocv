@@ -1,0 +1,13 @@
+{
+ "BOND_LIMIT": 3.4002,
+ "TEMPLATE_PATH_GJF": null,
+ "TEMPLATE_PATH_SI": null,
+ "bond.limit": 3.4002,
+ "render.cloud.step": 0.2,
+ "render.cloud.border": 4.0,
+ "img.space.step": 0.1,
+ "if_buff": true,
+ "gjf.title": "b3lyp/6-31g(d) pop=full gfinput iop(3/33=1)",
+ "march.isov": 0.03,
+ "march.dens": 0.001
+}

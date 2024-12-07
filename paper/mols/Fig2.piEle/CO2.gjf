@@ -1,0 +1,12 @@
+%nprocshared=28
+%mem=58GB
+%chk=CO2.chk
+# opt freq b3lyp/6-31g pop=full gfinput iop(3/33=1)
+
+Title Card Required
+
+0 1
+ C                  0.00000000    0.00000000    0.00000000
+ O                  0.00000000    0.00000000    1.16914800
+ O                  0.00000000    0.00000000   -1.16914800
+
