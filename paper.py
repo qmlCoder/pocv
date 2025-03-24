@@ -13,48 +13,47 @@ from typing import Any
 
 
 ### Figure 2
-# print(f"{'Data of Figure 2':-^40}")
-# piOrdersP=np.load('数据/piOrders-lianben.npy')
-# piOrdersS=np.load('数据/SpiOrders-lianben.npy')
-# myOrders =np.load('数据/myOrders-lianben.npy')
-# np.loadtxt
-# def dang(x):
-#     if x<-180:
-#         x+=360
-#     if x>180:
-#         x-=360
-#     return x
-# xs=np.linspace(-180,180,37)+90
-# angs=[dang(float(x)) for x in xs]
-# xticks=[f'{ang}°' for ang in angs]
-# fig: Figure
-# ax: Any
-# fig, ax = plt.subplots(2,2,figsize=(10,6))  # type: ignore
-# plt.rc('font',family='Times New Roman', size=13)
-# plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.5, hspace=0.3)
-# ax[0,0].axis('off')
-# ax[0,1].plot(xs,piOrdersS[:,0],color='#e96d53',marker='.',linestyle='-',label='$P_{3,12}$')
-# ax[0,1].plot(xs,piOrdersS[:,1],color='#2b9d8b',marker='.',linestyle='-',label='$P_{3,2}$')
-# ax[1,0].plot(xs,piOrdersP[:,0],color='#e96d53',marker='.',linestyle='-',label="$P'_{3,12}$")
-# ax[1,0].plot(xs,piOrdersP[:,1],color='#2b9d8b',marker='.',linestyle='-',label="$P'_{3,2}$")
-# ax[1,1].plot(xs,myOrders[:,0]-1,color='#e96d53',marker='.',linestyle='-',label='$M_{3,12}-1$')
-# ax[1,1].plot(xs,myOrders[:,1]-1,color='#2b9d8b',marker='.',linestyle='-',label='$M_{3,2}-1$')
-# step=9
-# def setFig(ax,label,title):
-#     ax.set_xticks(xs[::step],labels=xticks[::step])
-#     ax.legend(loc='upper left',prop={'size':10},bbox_to_anchor=(1.0, 1.0))
-#     ax.set_xlabel('Dihedral Angle [°]')
-# setFig(ax[0,1],'(b)','$\pi$ Bond Order cumputed by POCV method')
-# setFig(ax[1,0],'(c)','Mayer Bond Order')
-# setFig(ax[1,1],'(d)','Mayer Bond Order minus one')
-# plt.subplots_adjust(hspace=0.4)
-# fig.savefig('paper/Figure2.png',bbox_inches='tight',dpi=300)
-# for each in piOrdersP:
-#     print(each)
-# for each in piOrdersS:
-#     print(each)
-# for each in myOrders:
-#     print(each)
+from pywfn.bondprop import order
+root=f'paper/mols/Fig1.scan'
+bonds=[(2,3),(3,10),(10,11),(10,12)]
+orders=np.zeros(shape=(37,3,4))
+orders[:,0,:]=np.loadtxt('paper/npys/piOrderSMO.txt')
+for i in range(37):
+    path=f'{root}/f{i+1:0>2}.log'
+    print(path)
+    mol=Mol(LogReader(f'{path}'))
+    caler=order.Calculator(mol)
+    # 轨道挑选法
+    # print(f"{'pi bond order (SMO)':-^40}")
+    # for b,(a1,a2) in enumerate(bonds): # spepd is too slowly
+    #     result=caler.pi_smo([a1,a2])
+    #     orders[i,0,b]=result
+    #     print(a1,a2,result)
+    
+    
+    for b,(a1,a2) in enumerate(bonds):
+        val=orders[i,0,b]
+        print(a1,a2,val)
+    # pocv方法计算pi键键级
+    print(f"{'pi bond order (POCV)':-^40}")
+    result=caler.pi_pocv()
+    index=0
+    for a1,a2,val in result:
+        a1,a2=int(a1),int(a2)
+        if (a1,a2) not in bonds:continue
+        print(a1,a2,val)
+        orders[i,1,index]=val
+        index+=1
+    # mayer键键级
+    print(f"{'mayer bond order':-^40}")
+    result=caler.mayer()
+    index=0
+    for a1,a2,val in result:
+        a1,a2=int(a1),int(a2)
+        if (a1,a2) not in bonds:continue
+        print(a1,a2,val)
+        orders[i,2,index]=val
+        index+=1
 
 
 ### Figure 3 pi electron population
